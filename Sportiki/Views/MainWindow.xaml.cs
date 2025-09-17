@@ -52,23 +52,23 @@ namespace SportsApp
 
         private void LoadData()
         {
-            // Загружаем справочники
+            
             Categories = db.Categories.ToList();
             Levels = db.Levels.ToList();
 
-            // Загружаем спортсменов с связанными данными
+           
             Athletes = db.Athletes
                 .Include(a => a.Category)
                 .Include(a => a.Level)
                 .ToList();
 
-            // Инициализируем нового спортсмена
+           
             InsertAthlete = new Athlete();
         }
 
         private void InsertAthleteMethod(object sender, RoutedEventArgs e)
         {
-            // Проверка заполнения полей
+            
             if (string.IsNullOrWhiteSpace(InsertAthlete.FirstName) ||
                 string.IsNullOrWhiteSpace(InsertAthlete.LastName) ||
                 InsertAthlete.Birthday == null ||
@@ -79,17 +79,17 @@ namespace SportsApp
                 return;
             }
 
-            // Устанавливаем ID для связанных сущностей
+           
             InsertAthlete.CategoryId = InsertAthlete.Category.Id;
             InsertAthlete.LevelId = InsertAthlete.Level.Id;
 
-            // Добавляем в базу
+           
             db.Athletes.Add(InsertAthlete);
             db.SaveChanges();
 
             MessageBox.Show("Спортсмен добавлен!");
 
-            // Обновляем данные
+
             LoadData();
         }
 
