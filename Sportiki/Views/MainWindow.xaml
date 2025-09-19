@@ -7,51 +7,81 @@
         xmlns:models="clr-namespace:Sportiki.DB"
         xmlns:conv="clr-namespace:Sportiki.Converters"
         mc:Ignorable="d"
-        Title="Управление тренировками" Height="600" Width="900">
-    <Window.Resources>
-        <conv:DateTimeToDateOnly x:Key="ddConverter"/>
-    </Window.Resources>
+        Title="Управление тренировками" Height="600" Width="600">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="1*"/>
-        </Grid.ColumnDefinitions>
+        <TabControl>
+            <TabItem Header="Спортсмены">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-        <DataGrid x:Name="AthletesGrid" Grid.Column="0" Margin="10"
-                 ItemsSource="{Binding Athletes}" AutoGenerateColumns="False"
-                 IsReadOnly="True">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
-                <DataGridTextColumn Header="Имя" Binding="{Binding FirstName}" Width="100"/>
-                <DataGridTextColumn Header="Фамилия" Binding="{Binding LastName}" Width="100"/>
-                <DataGridTextColumn Header="Дата рождения" Binding="{Binding Birthday, StringFormat=\{0:dd.MM.yyyy\}}" Width="100"/>
-                <DataGridTextColumn Header="Категория" Binding="{Binding Category.Category1}" Width="100"/>
-                <DataGridTextColumn Header="Уровень" Binding="{Binding Level.Level1}" Width="100"/>
-            </DataGrid.Columns>
-        </DataGrid>
+                    <DataGrid x:Name="AthletesGrid" Grid.Row="0" Margin="10"
+                              ItemsSource="{Binding Athletes}" AutoGenerateColumns="False" IsReadOnly="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
+                            <DataGridTextColumn Header="Имя" Binding="{Binding FirstName}" Width="100"/>
+                            <DataGridTextColumn Header="Фамилия" Binding="{Binding LastName}" Width="100"/>
+                            <DataGridTextColumn Header="Дата рождения" Binding="{Binding Birthday, StringFormat=\{0:dd.MM.yyyy\}}" Width="100"/>
+                            <DataGridTextColumn Header="Категория" Binding="{Binding Category.Category1}" Width="100"/>
+                            <DataGridTextColumn Header="Уровень" Binding="{Binding Level.Level1}" Width="100"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
 
-        <StackPanel Grid.Column="1" Margin="10">
-            <TextBlock Text="Добавить спортсмена" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10">
+                        <Button Content="Добавить спортсмена" Click="AddAthlete_Click" Width="120" Margin="5"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
 
-            <TextBlock Text="Имя:" Margin="0,0,0,5"/>
-            <TextBox Text="{Binding InsertAthlete.FirstName}" Margin="0,0,0,10"/>
+            <TabItem Header="Тренировки">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-            <TextBlock Text="Фамилия:" Margin="0,0,0,5"/>
-            <TextBox Text="{Binding InsertAthlete.LastName}" Margin="0,0,0,10"/>
+                    <DataGrid x:Name="TrainingsGrid" Grid.Row="0" Margin="10"
+                             AutoGenerateColumns="False" IsReadOnly="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
+                            <DataGridTextColumn Header="Название" Binding="{Binding Title}" Width="100"/>
+                            <DataGridTextColumn Header="Дата и время" Binding="{Binding DateTime}" Width="120"/>
+                            <DataGridTextColumn Header="Длительность" Binding="{Binding Duration}" Width="80"/>
+                            <DataGridTextColumn Header="Тип" Binding="{Binding Type}" Width="100"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
 
-            <TextBlock Text="Дата рождения:" Margin="0,0,0,5"/>
-            <DatePicker SelectedDate="{Binding InsertAthlete.Birthday, Converter={StaticResource ddConverter}}" Margin="0,0,0,10"/>
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10">
+                        <Button Content="Добавить тренировку" Click="AddTraining_Click" Width="120" Margin="5"/>
+                        <Button Content="Удалить тренировку" Click="DeleteTraining_Click" Width="120" Margin="5"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
 
-            <TextBlock Text="Категория:" Margin="0,0,0,5"/>
-            <ComboBox DisplayMemberPath="Category1" ItemsSource="{Binding Categories}" 
-                     SelectedItem="{Binding InsertAthlete.Category}" Margin="0,0,0,10"/>
+            <TabItem Header="Участие">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-            <TextBlock Text="Уровень:" Margin="0,0,0,5"/>
-            <ComboBox DisplayMemberPath="Level1" ItemsSource="{Binding Levels}" 
-                     SelectedItem="{Binding InsertAthlete.Level}" Margin="0,0,0,20"/>
+                    <DataGrid x:Name="ParticipationsGrid" Grid.Row="0" Margin="10"
+                             AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Спортсмен" Binding="{Binding Athlete.FullName}" Width="120"/>
+                            <DataGridTextColumn Header="Тренировка" Binding="{Binding Training.Title}" Width="100"/>
+                            <DataGridTextColumn Header="Оценка" Binding="{Binding Grade}" Width="60"/>
+                            <DataGridTextColumn Header="Комментарий" Binding="{Binding Comment}" Width="200"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
 
-            <Button Content="Добавить" Click="InsertAthleteMethod" Height="30"/>
-            <Button Content="Обновить список" Click="Refresh_Click" Height="30" Margin="0,10,0,0"/>
-        </StackPanel>
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10">
+                        <Button Content="Записать на тренировку" Click="AddParticipation_Click" Width="150" Margin="5"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

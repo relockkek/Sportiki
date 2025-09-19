@@ -1,0 +1,35 @@
+﻿<Window x:Class="Sportiki.Views.AddTrainingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Sportiki.Views"
+        mc:Ignorable="d"
+        Title="AddTrainingWindow" Height="400" Width="300">
+    <StackPanel Margin="15">
+        <TextBlock Text="Название:"/>
+        <TextBox Text="{Binding TrainingTitle}" Margin="0 5 0 10"/>
+
+        <TextBlock Text="Дата и время:"/>
+        <TextBox Text="{Binding TrainingDateTime}" Margin="0 5 0 10"/>
+
+        <TextBlock Text="Длительность:" Margin="0,0,0,5"/>
+        <ComboBox x:Name="DurationCombo" SelectedValue="{Binding SelectedDuration}" Margin="0 5 0 10">
+            <ComboBoxItem Content="30 минут"/>
+            <ComboBoxItem Content="1 час"/>
+            <ComboBoxItem Content="1.5 часа"/>
+            <ComboBoxItem Content="2 часа"/>
+        </ComboBox>
+
+            <TextBlock Text="Тип тренировки:"/>
+        <ComboBox x:Name="TypeCombo" SelectedValue="{Binding SelectedType}" Margin="0 5 0 20">
+            <ComboBoxItem Content="Тяжелая"/>
+            <ComboBoxItem Content="Легкая"/>
+            <ComboBoxItem Content="Кардио"/>
+            <ComboBoxItem Content="Техническая"/>
+            <ComboBoxItem Content="Силовая"/>
+        </ComboBox>
+
+            <Button Content="Добавить" Click="AddTraining_Click" Height="30"/>
+    </StackPanel>
+</Window>

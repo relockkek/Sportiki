@@ -11,7 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-
+using Sportiki.DB;
+using Sportiki.Converters;
 namespace Sportiki
 {
     /// <summary>
@@ -19,9 +20,15 @@ namespace Sportiki
     /// </summary>
     public partial class AddParticipationWindow : Window
     {
-        public AddParticipationWindow()
+        public AddParticipationWindow(Sportiki1135Context context)
         {
             InitializeComponent();
+
+        }
+
+        private void AddParticipation_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

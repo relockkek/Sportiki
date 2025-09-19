@@ -1,106 +1,128 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Sportiki;
 using Sportiki.DB;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using Sportiki.DB;
+using Sportiki.Converters;
+using Sportiki.Views;
 namespace SportsApp
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        private Sportiki1135Context db;
-        private Athlete insertAthlete = new Athlete();
-        private List<Athlete> athletes;
+        private Sportiki1135Context _context;
+        private List<Athlete> _athletes;
+        private List<Training> _trainings;
+        private List<Participation> _participations;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        void Signal([CallerMemberName] string prop = null) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
-
         public List<Athlete> Athletes
         {
-            get => athletes;
-            set
-            {
-                athletes = value;
-                Signal();
-            }
+            get => _athletes;
+            set { _athletes = value;
+                OnPropertyChanged(); }
         }
 
-        public Athlete InsertAthlete
+        public List<Training> Trainings
         {
-            get => insertAthlete;
-            set
-            {
-                insertAthlete = value;
-                Signal();
-            }
+            get => _trainings;
+            set { _trainings = value;
+                OnPropertyChanged(); }
         }
 
-        public List<Category> Categories { get; set; }
-        public List<Level> Levels { get; set; }
+        public List<Participation> Participations
+        {
+            get => _participations;
+            set { _participations = value;
+                OnPropertyChanged(); }
+        }
 
-        public MainWindow()
+        public MainWindow() 
         {
             InitializeComponent();
-            db = new Sportiki1135Context();
-            LoadData();
+            _context = new Sportiki1135Context();
             DataContext = this;
+            LoadData();
         }
 
         private void LoadData()
         {
-            
-            Categories = db.Categories.ToList();
-            Levels = db.Levels.ToList();
-
-           
-            Athletes = db.Athletes
+            Athletes = _context.Athletes
                 .Include(a => a.Category)
                 .Include(a => a.Level)
                 .ToList();
+            OnPropertyChanged();
 
-           
-            InsertAthlete = new Athlete();
+            Trainings = _context.Trainings.ToList();
+
+            Participations = _context.Participations
+                .Include(p => p.Athlete)
+                .Include(p => p.Training)
+                .ToList();
+            OnPropertyChanged();
         }
 
-        private void InsertAthleteMethod(object sender, RoutedEventArgs e)
+        private void AddAthlete_Click(object sender, RoutedEventArgs e)
         {
-            
-            if (string.IsNullOrWhiteSpace(InsertAthlete.FirstName) ||
-                string.IsNullOrWhiteSpace(InsertAthlete.LastName) ||
-                InsertAthlete.Birthday == null ||
-                InsertAthlete.Category == null ||
-                InsertAthlete.Level == null)
+            var window = new AddAthleteWindow(_context);
+            if (window.ShowDialog() == true)
             {
-                MessageBox.Show("Заполните все поля");
-                return;
+                _context.Athletes.Add(window.CurrentAthlete);
+                _context.SaveChanges();
+                LoadData();
             }
-
-           
-            InsertAthlete.CategoryId = InsertAthlete.Category.Id;
-            InsertAthlete.LevelId = InsertAthlete.Level.Id;
-
-           
-            db.Athletes.Add(InsertAthlete);
-            db.SaveChanges();
-
-            MessageBox.Show("Спортсмен добавлен!");
-
-
-            LoadData();
         }
 
-        private void Refresh_Click(object sender, RoutedEventArgs e)
+        private void AddTraining_Click(object sender, RoutedEventArgs e)
         {
-            LoadData();
+            var window = new AddTrainingWindow(_context);
+            if (window.ShowDialog() == true)
+            {
+                LoadData();
+            }
+        }
+
+        private void AddParticipation_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new AddParticipationWindow(_context);
+            if (window.ShowDialog() == true)
+            {
+                LoadData();
+            }
+        }
+
+        private void DeleteTraining_Click(object sender, RoutedEventArgs e)
+        {
+            if (TrainingsGrid.SelectedItem is Training selectedTraining)
+            {
+                var result = MessageBox.Show("Удалить тренировку и все записи участия?",
+                    "Подтверждение", MessageBoxButton.YesNo);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    var participations = _context.Participations
+                        .Where(p => p.TrainingId == selectedTraining.Id);
+                    _context.Participations.RemoveRange(participations);
+
+                    _context.Trainings.Remove(selectedTraining);
+                    _context.SaveChanges();
+                    LoadData();
+                }
+            }
+        }
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            db?.Dispose();
+            _context?.Dispose();
             base.OnClosing(e);
         }
     }

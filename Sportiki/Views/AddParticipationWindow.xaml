@@ -5,8 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Sportiki"
         mc:Ignorable="d"
-        Title="AddParticipationWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="AddParticipationWindow" Height="400" Width="300">
+    <StackPanel Margin="15">
+        <TextBlock Text="Спортсмен:"/>
+        <ComboBox Text="{Binding CurrentAthlete}" Margin="0 5 0 10"/>
+
+        <TextBlock Text="Тренировка:"/>
+        <ComboBox Text="{Binding CurrentAthlete}" Margin="0 5 0 10"/>
+
+        <TextBlock Text="Оценка:" Margin="0,0,0,5"/>
+        <ComboBox DisplayMemberPath="Category1" ItemsSource="{Binding Categories}" 
+                     SelectedItem="{Binding CurrentAthlete.Category}" Margin="0,0,0,10"/>
+
+        <TextBlock Text="Уровень:" Margin="0,0,0,5"/>
+        <ComboBox DisplayMemberPath="Level1" ItemsSource="{Binding Levels}" 
+                     SelectedItem="{Binding CurrentAthlete.Level}" Margin="0,0,0,20"/>
+
+        <Button Content="Добавить" Click="AddParticipation_Click" Height="30"/>
+    </StackPanel>
 </Window>
