@@ -20,7 +20,7 @@
             <ComboBoxItem Content="1.5 часа"/>
             <ComboBoxItem Content="2 часа"/>
         </ComboBox>
-
+            
             <TextBlock Text="Тип тренировки:"/>
         <ComboBox x:Name="TypeCombo" SelectedValue="{Binding SelectedType}" Margin="0 5 0 20">
             <ComboBoxItem Content="Тяжелая"/>
@@ -29,7 +29,11 @@
             <ComboBoxItem Content="Техническая"/>
             <ComboBoxItem Content="Силовая"/>
         </ComboBox>
+        <TextBlock Text="Оценка (от 1 до 5):"/>
+        <TextBox Text="{Binding SelectedEstimation}" Margin="0 5 0 10"/>
 
-            <Button Content="Добавить" Click="AddTraining_Click" Height="30"/>
+        <TextBlock Text="Комментарий об игроке:"/>
+        <TextBox Text="{Binding SelectedComment}" Margin="0 5 0 10"/>
+        <Button Content="Добавить" Click="AddTraining_Click" Height="30"/>
     </StackPanel>
 </Window>

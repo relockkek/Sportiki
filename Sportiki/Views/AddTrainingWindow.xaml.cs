@@ -1,4 +1,5 @@
-﻿using Sportiki.Converters;
+﻿using Microsoft.EntityFrameworkCore;
+using Sportiki.Converters;
 using Sportiki.DB;
 using System;
 using System.Collections.Generic;
@@ -19,11 +20,13 @@ namespace Sportiki.Views
 {
     public partial class AddTrainingWindow : Window, INotifyPropertyChanged
     {
+        private Sportiki1135Context _context;
         private string _trainingTitle;
         private string _trainingDateTime;
         private string _selectedDuration;
         private string _selectedType;
-
+        private string _selectedEstimation;
+        private string _selectedComment;
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public Training NewTraining { get; private set; }
@@ -64,9 +67,28 @@ namespace Sportiki.Views
                 OnPropertyChanged();
             }
         }
+        public string SelectedEstimation
+        {
+            get => _selectedEstimation;
+            set
+            {
+                _selectedEstimation = value;
+                OnPropertyChanged();
+            }
+        }
+        public string SelectedComment
+        {
+            get => _selectedComment;
+            set
+            {
+                _selectedComment = value;
+                OnPropertyChanged();
+            }
+        }
         public AddTrainingWindow(Sportiki1135Context context)
         {
             InitializeComponent();
+            _context = context;
             NewTraining = new Training();
             DataContext = this;
         }
@@ -74,19 +96,24 @@ namespace Sportiki.Views
         {
             if (string.IsNullOrWhiteSpace(TrainingTitle) ||
                 string.IsNullOrWhiteSpace(TrainingDateTime) ||
-                SelectedDuration == null ||
-                SelectedType == null)
+                DurationCombo.SelectedItem == null ||
+                TypeCombo.SelectedItem == null ||
+                string.IsNullOrEmpty(SelectedEstimation) ||
+                string.IsNullOrEmpty(SelectedComment)) 
+
             {
                 MessageBox.Show("Заполните все поля");
                 return;
+                
             }
-
-            if (DurationCombo.SelectedItem is ComboBoxItem durationitem) 
-                NewTraining.Duration = durationitem.Content.ToString();
-
-            if (TypeCombo.SelectedItem is ComboBoxItem typeitem)
-                NewTraining.Type = typeitem.Content.ToString();
-
+            NewTraining.Title = int.Parse(TrainingTitle);
+            NewTraining.DateTime = TrainingDateTime;
+            NewTraining.Duration = (DurationCombo.SelectedItem as ComboBoxItem)?.Content?.ToString();
+            NewTraining.Type = (TypeCombo.SelectedItem as ComboBoxItem)?.Content?.ToString();
+            NewTraining.Estimation = sbyte.Parse(SelectedEstimation);
+            NewTraining.Comment = SelectedComment;
+            _context.Trainings.Add(NewTraining);
+            _context.SaveChanges();
             DialogResult = true;
             Close();
         }
