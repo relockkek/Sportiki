@@ -82,6 +82,9 @@ namespace SportsApp
             var window = new AddTrainingWindow(_context);
             if (window.ShowDialog() == true)
             {
+                _context.Trainings.Add(window.NewTraining);
+                _context.SaveChanges();
+
                 LoadData();
             }
         }

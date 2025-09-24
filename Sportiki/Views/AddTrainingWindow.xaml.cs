@@ -97,23 +97,19 @@ namespace Sportiki.Views
             if (string.IsNullOrWhiteSpace(TrainingTitle) ||
                 string.IsNullOrWhiteSpace(TrainingDateTime) ||
                 DurationCombo.SelectedItem == null ||
-                TypeCombo.SelectedItem == null ||
-                string.IsNullOrEmpty(SelectedEstimation) ||
-                string.IsNullOrEmpty(SelectedComment)) 
-
+                TypeCombo.SelectedItem == null)
             {
                 MessageBox.Show("Заполните все поля");
                 return;
-                
             }
+
             NewTraining.Title = int.Parse(TrainingTitle);
             NewTraining.DateTime = TrainingDateTime;
             NewTraining.Duration = (DurationCombo.SelectedItem as ComboBoxItem)?.Content?.ToString();
             NewTraining.Type = (TypeCombo.SelectedItem as ComboBoxItem)?.Content?.ToString();
-            NewTraining.Estimation = sbyte.Parse(SelectedEstimation);
+            NewTraining.Estimation = string.IsNullOrEmpty(SelectedEstimation) ? null : sbyte.Parse(SelectedEstimation);
             NewTraining.Comment = SelectedComment;
-            _context.Trainings.Add(NewTraining);
-            _context.SaveChanges();
+
             DialogResult = true;
             Close();
         }
