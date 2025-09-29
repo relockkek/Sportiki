@@ -103,7 +103,7 @@ namespace Sportiki.Views
                 return;
             }
 
-            NewTraining.Title = int.Parse(TrainingTitle);
+            NewTraining.Title = TrainingTitle;
             NewTraining.DateTime = TrainingDateTime;
             NewTraining.Duration = (DurationCombo.SelectedItem as ComboBoxItem)?.Content?.ToString();
             NewTraining.Type = (TypeCombo.SelectedItem as ComboBoxItem)?.Content?.ToString();

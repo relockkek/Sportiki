@@ -5,22 +5,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Sportiki"
         mc:Ignorable="d"
-        Title="AddParticipationWindow" Height="400" Width="300">
+        Title="Запись на тренировку" Height="400" Width="300">
     <StackPanel Margin="15">
-        <TextBlock Text="Спортсмен:"/>
-        <ComboBox Text="{Binding CurrentAthlete}" Margin="0 5 0 10"/>
+        <TextBlock Text="Выберите спортсмена:"/>
+        <ComboBox x:Name="AthleteCombo" DisplayMemberPath="FullName" Margin="0 5 0 10"/>
 
-        <TextBlock Text="Тренировка:"/>
-        <ComboBox Text="{Binding CurrentAthlete}" Margin="0 5 0 10"/>
+        <TextBlock Text="Выберите тренировку:"/>
+        <ComboBox x:Name="TrainingCombo" DisplayMemberPath="Title" Margin="0 5 0 10"/>
 
-        <TextBlock Text="Оценка:" Margin="0,0,0,5"/>
-        <ComboBox DisplayMemberPath="Category1" ItemsSource="{Binding Categories}" 
-                     SelectedItem="{Binding CurrentAthlete.Category}" Margin="0,0,0,10"/>
+        <TextBlock Text="Оценка тренировки (от 1 до 5)"/>
+        <ComboBox x:Name="GradeCombo" Margin="0 5 0 10">
+            <ComboBoxItem Content="1 - Плохо"/>
+            <ComboBoxItem Content="2 - Удовлетворительно"/>
+            <ComboBoxItem Content="3 - Хорошо"/>
+            <ComboBoxItem Content="4 - Очень хорошо"/>
+            <ComboBoxItem Content="5 - Отлично"/>
+        </ComboBox>
 
-        <TextBlock Text="Уровень:" Margin="0,0,0,5"/>
-        <ComboBox DisplayMemberPath="Level1" ItemsSource="{Binding Levels}" 
-                     SelectedItem="{Binding CurrentAthlete.Level}" Margin="0,0,0,20"/>
+        <TextBlock Text="Комментарий тренера (необязательно):"/>
+        <TextBox x:Name="CommentBox" Height="60" Margin="0 5 0 20"/>
 
-        <Button Content="Добавить" Click="AddParticipation_Click" Height="30"/>
+        <Button Content="Записать участие" Click="Save_Click" Height="30"/>
     </StackPanel>
 </Window>

@@ -94,7 +94,10 @@ namespace SportsApp
             var window = new AddParticipationWindow(_context);
             if (window.ShowDialog() == true)
             {
+                _context.Participations.Add(window.NewParticipation);
+                _context.SaveChanges();
                 LoadData();
+                MessageBox.Show("Спортсмен записан на тренировку");
             }
         }
 
@@ -127,6 +130,26 @@ namespace SportsApp
         {
             _context?.Dispose();
             base.OnClosing(e);
+        }
+
+        private void DeleteSport_Click(object sender, RoutedEventArgs e)
+        {
+            if (AthletesGrid.SelectedItem is Athlete selectedAthlete)
+            {
+                var result = MessageBox.Show("Удалить спортсмена?",
+                    "Подтверждение", MessageBoxButton.YesNo);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    var participations = _context.Participations
+                        .Where(p => p.AthleteId == selectedAthlete.Id);
+                    _context.Participations.RemoveRange(participations);
+
+                    _context.Athletes.Remove(selectedAthlete);
+                    _context.SaveChanges();
+                    LoadData();
+                }
+            }
         }
     }
 }

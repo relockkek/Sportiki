@@ -152,7 +152,7 @@ public partial class Sportiki1135Context : DbContext
                 .HasColumnType("tinyint(4)")
                 .HasColumnName("estimation");
             entity.Property(e => e.Title)
-                .HasColumnType("int(11)")
+                .HasMaxLength(255)
                 .HasColumnName("title");
             entity.Property(e => e.Type)
                 .HasMaxLength(255)

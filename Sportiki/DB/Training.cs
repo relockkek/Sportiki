@@ -7,7 +7,7 @@ public partial class Training
 {
     public int Id { get; set; }
 
-    public int? Title { get; set; }
+    public string? Title { get; set; }
 
     public string? DateTime { get; set; }
 
